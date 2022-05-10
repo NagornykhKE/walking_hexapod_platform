@@ -1,0 +1,54 @@
+<launch>
+
+  <env name="GAZEBO_MODEL_PATH"
+    value="$(find walking_hexapod_platform)/models:$(optenv GAZEBO_MODEL_PATH)"/>
+
+  <env name="GAZEBO_RESOURCE_PATH"
+    value="$(find walking_hexapod_platform):$(optenv GAZEBO_RESOURCE_PATH)"/>
+
+  <include
+    file="$(find gazebo_ros)/launch/empty_world.launch" >
+    <arg name="paused" value="true"/>
+    <arg name="world_name" default="$(find walking_hexapod_platform)/worlds/step.world"/>
+  </include>  
+   
+   <param name="robot_description" command="xacro --inorder '$(find walking_hexapod_platform/urdf/walking_hexapod_platform.urdf'"/>
+  <node
+    name="spawn_model"
+    pkg="gazebo_ros"
+    type="spawn_model"
+    args="-urdf -param robot_description -model walking_hexapod_platform"
+    output="screen" />
+
+    <rosparam command="load" file="$(find walking_hexapod_platform)/config/control.yaml" />
+    
+    <node name="controller_spawner" pkg="controller_manager" type="spawner"
+              respawn="false" output="screen"
+              args="joint_state_controller
+              left_forward1_position_controller
+              left_forward2_position_controller
+              left_forward3_position_controller
+              left_forward4_position_controller
+              left_middle1_position_controller
+              left_middle2_position_controller
+              left_middle3_position_controller
+              left_middle4_position_controller
+              left_backward1_position_controller
+              left_backward2_position_controller
+              left_backward3_position_controller
+              left_backward4_position_controller
+              right_forward1_position_controller
+              right_forward2_position_controller
+              right_forward3_position_controller
+              right_forward4_position_controller
+              right_middle1_position_controller
+              right_middle2_position_controller
+              right_middle3_position_controller
+              right_middle4_position_controller
+              right_backward1_position_controller
+              right_backward2_position_controller
+              right_backward3_position_controller
+              right_backward4_position_controller">
+        </node>
+    
+</launch>

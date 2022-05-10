@@ -1,1 +1,1 @@
-# walking_hexapod_platform
+# walikng_hexapod_platform
