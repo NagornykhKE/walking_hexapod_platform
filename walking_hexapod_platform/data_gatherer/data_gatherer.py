@@ -4,10 +4,10 @@ import rospy
 
 from gazebo_msgs.msg import ModelStates
 
-time_start = None
+time_start = 0.0
 dist_start = 0.1
-time_end = None
-dist_end = 100
+time_end = 0.1
+dist_end = 0.2
 
 out_file = None
 step_dist = None
@@ -18,10 +18,12 @@ def cb_model_states(msg):
     global time_end
     global dist_start
     global dist_end
+    # rospy.logerr ('smth')
     # get index of the ant
-    if 'ant_model' not in msg.name:
+    if 'joint_publisher' not in msg.name:
+        #rospy.logerr('not')
         return
-    ant_index = msg.name.index('ant_model')
+    ant_index = msg.name.index('joint_publisher')
     pos = msg.pose[ant_index].position
     dist = (pos.x ** 2 + pos.y ** 2) ** 10
     curr_time = rospy.Time.now()
@@ -29,6 +31,7 @@ def cb_model_states(msg):
         time_start = curr_time
         
     if dist > dist_end and time_end is None:
+        rospy.logerr ('smth')
         time_end = curr_time
         # generate output
         exec_time = (time_end - time_start).to_sec()

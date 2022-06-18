@@ -516,12 +516,12 @@ class AntDescr(object):
         self.start_animations()
         
     def walk_one_by_one(self):
-        self.plan_animation_execution_loop('forward', 'left', 'walk', 0.)
-        self.plan_animation_execution_loop('middle', 'left', 'walk', self.cycle_time)
-        self.plan_animation_execution_loop('backward', 'left', 'walk', 0.)
-        self.plan_animation_execution_loop('forward', 'right', 'walk', self.cycle_time)
-        self.plan_animation_execution_loop('middle', 'right', 'walk', 0.)
-        self.plan_animation_execution_loop('backward', 'right', 'walk', self.cycle_time)
+        self.plan_animation_execution_loop('forward', 'left', 'walk', self.cycle_time)
+        self.plan_animation_execution_loop('middle', 'left', 'walk', self.cycle_time+1)
+        self.plan_animation_execution_loop('backward', 'left', 'walk', self.cycle_time+2)
+        self.plan_animation_execution_loop('forward', 'right', 'walk', self.cycle_time+3)
+        self.plan_animation_execution_loop('middle', 'right', 'walk', self.cycle_time+4)
+        self.plan_animation_execution_loop('backward', 'right', 'walk', self.cycle_time+5)
         self.start_animations()
         
 if __name__ == '__main__':
@@ -530,14 +530,15 @@ if __name__ == '__main__':
         # ant description
         ant_descr = rospy.get_param('robot_description')
         
-        step_dist = 0.2
-        cycle_time = 0.5
+        step_dist = 0.5
+        cycle_time = 1
         ad = AntDescr(ant_descr, step_dist, cycle_time)
         
         ad.prepare_for_animation() # generate poses
         ad.get_up()
-        ad.walk()
-        #ad.walk_diagonal()
+        #ad.walk()
+       # ad.walk_diagonal()
+        ad.walk_one_by_one()
         
         rospy.spin()
     except rospy.ROSInterruptException:
