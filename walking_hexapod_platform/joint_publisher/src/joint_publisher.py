@@ -257,10 +257,10 @@ class AntDescr(object):
         
         self.dx_zero = {'forward': 0.03,
                         'middle': 0.,
-                        'backward': -0.05}
+                        'backward': -0.4}
         self.dy_zero = {'forward': 0.01,
                         'middle': 0.03,
-                        'backward': 0.01}
+                        'backward': 0.2}
         
         # state variables
         self.anim_plan = {}
@@ -538,15 +538,16 @@ if __name__ == '__main__':
         # ant description
         ant_descr = rospy.get_param('robot_description')
         
-        step_dist = 0.5
+        step_dist = 0.7
         cycle_time = 1
         ad = AntDescr(ant_descr, step_dist, cycle_time)
         
         ad.prepare_for_animation() # generate poses
         ad.get_up()
         #ad.walk()
-       # ad.walk_diagonal()
+        #ad.walk_diagonal()
         ad.walk_one_by_one()
+        #ad.walk_on_four()
         
         rospy.spin()
     except rospy.ROSInterruptException:

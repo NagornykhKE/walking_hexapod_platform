@@ -16,7 +16,7 @@
     <xacro:property name="f_width" value="0.1" />
     <xacro:property name="dl_forward" value="1" />
     <xacro:property name="dl_middle" value="1.2" />
-    <xacro:property name="dl_backward" value="1.4" />
+    <xacro:property name="dl_backward" value="1.4" /> #were 1.4
     
 
     <xacro:property name="l1_pos_x" value="0.4"  />

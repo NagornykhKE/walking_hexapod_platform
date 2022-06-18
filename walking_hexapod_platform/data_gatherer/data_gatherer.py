@@ -5,9 +5,9 @@ import rospy
 from gazebo_msgs.msg import ModelStates
 
 time_start = None
-dist_start = 0.1
+dist_start = 1
 time_end = None
-dist_end = 1 
+dist_end = 4
 
 out_file = None
 step_dist = None
@@ -36,14 +36,15 @@ def cb_model_states(msg):
         time_end = curr_time
         rospy.logerr ('{}'.format(time_end))
         # generate output
-        exec_time = (time_end - time_start).to_sec()
+        exec_time = ((time_end - time_start).to_sec()*1000)+1
+        rospy.logerr ('{}'.format(exec_time))
         if exec_time < 1e-4:
             rospy.logerr('model failed')
         else:
             # write result to output file
             with open(out_file, 'a') as f:
-                f.write('{:.5f};{:.5f};{:.5f};{:.5f}\n'.format(step_dist, 2*cycle_time, exec_time))
-        # exit
+                f.write('{:.5f}; {:.5f};{:.5f}; {:.5f}\n'.format(step_dist, 2*cycle_time, exec_time, (dist_end-dist_start)/exec_time))
+        # exit;step_period;movement_time;velocity
         rospy.signal_shutdown('gathering finished')
         
 
