@@ -1,0 +1,56 @@
+<sdf version="1.6">
+  <world name="plain">
+
+    <gui>
+      <camera name="default">
+        <pose>31.7 8 6.4 0 0.17 -2.8</pose>
+      </camera>
+    </gui>
+
+    <physics name="ode_def" type="ode" default="true">
+      <real_time_factor>0.2</real_time_factor>
+      <real_time_update_rate>400</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>200</iters>
+        </solver>
+      </ode>
+    </physics>
+
+    <scene>
+      <origin_visual>false</origin_visual>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>224 243 249 10</background>
+      <shadows>true</shadows>
+      <grid>false</grid>
+      <sky>
+        <clouds>
+          <speed>0</speed>
+          <humidity>0.9</humidity>
+          <mean_size>0.9</mean_size>
+        </clouds>
+      </sky>
+      <fog>
+        <color>1 1 1 1</color>
+        <type>linear</type>
+        <density>.5</density>
+        <start>1</start>
+        <end>70</end>
+      </fog>
+    </scene>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <include>
+      <uri>model://plain</uri>
+      <static>true</static>
+      <pose>0 0 0  0 0 0</pose>
+    </include>
+
+    </world>
+</sdf>
+ 

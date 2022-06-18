@@ -1,0 +1,14 @@
+    def changer (walking_cycle, gait):
+        while walking_cycle == 1:
+            for i in len(gait):
+                if gait[j][i] == 1:
+                    poser()
+                if gait[j][i] == 0:
+                    pass
+        if walking_cycle == 0:
+            rospy.logerr('walking_cycle is over')
+    
+    
+    
+    
+    

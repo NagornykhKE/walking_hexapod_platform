@@ -1,0 +1,202 @@
+# Publish all joint states -----------------------------------
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Position Controllers ---------------------------------------
+left_forward1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_forward1_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_forward2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_forward2_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_forward3_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_forward3_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_forward4_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_forward4_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_forward1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_forward1_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_forward2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_forward2_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_forward3_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_forward3_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_forward4_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_forward4_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_middle1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_middle1_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_middle2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_middle2_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_middle3_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_middle3_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_middle4_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_middle4_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_middle1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_middle1_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_middle2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_middle2_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_middle3_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_middle3_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_middle4_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_middle4_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_backward1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_backward1_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_backward2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_backward2_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_backward3_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_backward3_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+right_backward4_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_backward4_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_backward1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_backward1_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_backward2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_backward2_joint
+  #pid: {p: 1.0, i: 0, d: 0.0}
+left_backward3_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_backward3_joint
+ # pid: {p: 1.0, i: 0, d: 0.0}
+left_backward4_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_backward4_joint
+#  pid: {p: 1.0, i: 0, d: 0.0}
+
+  
+gazebo_ros_control:
+  pid_gains:
+    left_forward1_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_forward2_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_forward3_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_forward4_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_middle1_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_middle2_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_middle3_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_middle4_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_backward1_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_backward2_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_backward3_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    left_backward4_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_forward1_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_forward2_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_forward3_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_forward4_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_middle1_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_middle2_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_middle3_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_middle4_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.00
+    right_backward1_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_backward2_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_backward3_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+    right_backward4_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
