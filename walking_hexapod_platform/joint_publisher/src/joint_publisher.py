@@ -26,6 +26,18 @@ def gen_walking_template(dx, dy, height_down, height_up,
     p5 = (dx + step_dist*0.5, dy + step_dy*0.5, -height_down)
     return [p1, p2, p2, p3, p4, p5, p5, p1]
 
+
+
+
+def gen_walking_template(dx, dy, height_down, height_up,
+                         step_dist, step_dy):
+    p1 = (dx, dy, -height_down)
+    p2 = (dx - step_dist*0.5, dy - step_dy*0.5, -height_down)
+    p3 = (dx - step_dist*0.5, dy - step_dy*0.5, -height_up)
+    p4 = (dx + step_dist*0.5, dy + step_dy*0.5, -height_up)
+    p5 = (dx + step_dist*0.5, dy + step_dy*0.5, -height_down)
+    return [p1, p2, p2, p3, p4, p5, p5, p1]
+
 # class for a single jointgenerate_get_up_animation
 class JointDescr(object):
     def __init__(self, pos, side, num):
@@ -260,7 +272,7 @@ class AntDescr(object):
                         'backward': 0.03}
         self.dy_zero = {'forward': 0.01,
                         'middle': 0.03,
-                        'backward': 0.2}
+                        'backward': 0.02}
         
         # state variables
         self.anim_plan = {}
@@ -391,7 +403,8 @@ class AntDescr(object):
 
     def prepare_for_animation(self):
         self.generate_get_up_animation()
-        self.generate_walking_animation()
+        #self.generate_walking_animation()
+        self.generate_walking_one_by_one_animation()
 
     def start_animations(self):
         self.animation_start_time = rospy.Time.now()
@@ -484,7 +497,34 @@ class AntDescr(object):
             self.add_animation_description(pos, side, 'walk',
                                            time_moments,
                                            poses)
-            
+    
+    def generate_walking_one_by_one_animation(self):
+        """ step movements """
+        get_up_time = self.cycle_time * 0.25
+        move_time = self.cycle_time * 0.5
+        get_down_time = self.cycle_time * 0.25
+        time_moments = [0.,
+                        move_time/6, 
+                        move_time/6 + get_down_time, 
+                        move_time/6 + get_down_time + get_up_time,
+                        3*move_time/6 + get_down_time + get_up_time,
+                        3*move_time/6 + get_up_time + 2*get_down_time,
+                        3*move_time/6 + 2*get_up_time + 2*get_down_time,
+                        2*(move_time + get_up_time + get_down_time)]
+        for (pos, side), limb in self.limbs.items():
+            # calculate disps
+            dx = self.dx_zero[pos]
+            dy = self.dy_zero[pos] + self.leg_y
+            if side == 'right':
+                dy = -dy
+            # get positions
+            poses = gen_walking_template(dx, dy,
+                                         self.body_height_down, self.body_height_up,
+                                         0.3, 0.)
+            # add animation
+            self.add_animation_description(pos, side, 'walk',
+                                           time_moments,
+                                           poses)
     
     def get_up(self):
         self.plan_animation_execution_num('forward', 'left', 'get_up', 0., 1)
@@ -506,14 +546,6 @@ class AntDescr(object):
         self.plan_animation_execution_loop('backward', 'right', 'walk', self.cycle_time)
         self.start_animations()
         
-    def walk_diagonal(self):
-        self.plan_animation_execution_loop('forward', 'left', 'walk', 0.)
-        self.plan_animation_execution_loop('middle', 'left', 'walk', self.cycle_time+1)
-        self.plan_animation_execution_loop('backward', 'left', 'walk', self.cycle_time)
-        self.plan_animation_execution_loop('forward', 'right', 'walk', self.cycle_time)
-        self.plan_animation_execution_loop('middle', 'right', 'walk', self.cycle_time+1)
-        self.plan_animation_execution_loop('backward', 'right', 'walk', 0.)
-        self.start_animations()
         
     def walk_one_by_one(self):
         self.plan_animation_execution_loop('forward', 'left', 'walk', self.cycle_time)
@@ -545,7 +577,6 @@ if __name__ == '__main__':
         ad.prepare_for_animation() # generate poses
         ad.get_up()
         #ad.walk()
-        #ad.walk_diagonal()
         ad.walk_one_by_one()
         #ad.walk_on_four()
         
