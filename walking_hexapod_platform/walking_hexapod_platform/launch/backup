@@ -1,0 +1,5 @@
+<node name="data_gatherer" pkg="data_gatherer" type="data_gatherer.py" required="True">
+        <param name="out_file" value="$(find data_gatherer)/output/res.csv"/>
+        <param name="step_dist" value="$(arg step_dist)"/>
+        <param name="cycle_time" value="$(arg cycle_time)"/>
+    </node> 

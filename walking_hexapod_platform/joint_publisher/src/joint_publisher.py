@@ -257,7 +257,7 @@ class AntDescr(object):
         
         self.dx_zero = {'forward': 0.03,
                         'middle': 0.,
-                        'backward': -0.4}
+                        'backward': 0.03}
         self.dy_zero = {'forward': 0.01,
                         'middle': 0.03,
                         'backward': 0.2}
@@ -527,9 +527,9 @@ class AntDescr(object):
     def walk_on_four(self):
         #self.plan_animation_execution_loop('forward', 'left', 'walk', self.cycle_time)
         self.plan_animation_execution_loop('middle', 'left', 'walk', 0.)
-        self.plan_animation_execution_loop('backward', 'left', 'walk', self.cycle_time+2)
+        self.plan_animation_execution_loop('backward', 'left', 'walk', self.cycle_time)
         #self.plan_animation_execution_loop('forward', 'right', 'walk', self.cycle_time+3)
-        self.plan_animation_execution_loop('middle', 'right', 'walk', self.cycle_time+4)
+        self.plan_animation_execution_loop('middle', 'right', 'walk', self.cycle_time)
         self.plan_animation_execution_loop('backward', 'right', 'walk', 0.)
         
 if __name__ == '__main__':

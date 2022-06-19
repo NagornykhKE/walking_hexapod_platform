@@ -7,7 +7,7 @@ from gazebo_msgs.msg import ModelStates
 time_start = None
 dist_start = 1
 time_end = None
-dist_end = 4
+dist_end = 6
 
 out_file = None
 step_dist = None
@@ -21,23 +21,19 @@ def cb_model_states(msg):
     # rospy.logerr ('smth')
     # get index of the ant
     if 'walking_hexapod_platform' not in msg.name:
-        #rospy.logerr('not')
         return
     ant_index = msg.name.index('walking_hexapod_platform')
     pos = msg.pose[ant_index].position
     dist = (pos.x ** 2 + pos.y ** 2) ** 10
+    rospy.logerr('dist: {:.5f}'.format(dist))
     curr_time = rospy.Time.now()
     if dist > dist_start and time_start is None:
         time_start = curr_time
-        rospy.logerr ('{}'.format(time_start))
     
     if dist > dist_end and time_end is None:
-        rospy.logerr ('smth')
         time_end = curr_time
-        rospy.logerr ('{}'.format(time_end))
         # generate output
-        exec_time = ((time_end - time_start).to_sec()*1000)+1
-        rospy.logerr ('{}'.format(exec_time))
+        exec_time = ((time_end - time_start).to_sec())
         if exec_time < 1e-4:
             rospy.logerr('model failed')
         else:

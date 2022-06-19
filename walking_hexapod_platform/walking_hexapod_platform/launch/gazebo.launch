@@ -1,7 +1,7 @@
 <launch>
 
   <arg name="step_dist" default="1" />
-  <arg name="cycle_time" default="1000" />
+  <arg name="cycle_time" default="1" />
   
   <env name="GAZEBO_MODEL_PATH"
     value="$(find walking_hexapod_platform)/models:$(optenv GAZEBO_MODEL_PATH)"/>
@@ -12,7 +12,7 @@
   <include
     file="$(find gazebo_ros)/launch/empty_world.launch" >
     <arg name="paused" value="true"/>
-    <arg name="world_name" default="$(find walking_hexapod_platform)/worlds/plane.world"/>
+    <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/plane.world"/-->
     <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/ramp5.world"/-->
     <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/ramp10.world"/-->
     <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/ramp20.world"/-->
@@ -25,7 +25,7 @@
     name="spawn_model"
     pkg="gazebo_ros"
     type="spawn_model"
-    args="-urdf -param robot_description -model walking_hexapod_platform "
+    args="-urdf -param robot_description -model walking_hexapod_platform -Y 3.14"
     output="screen" />
 
     <rosparam command="load" file="$(find walking_hexapod_platform)/config/control.yaml" />
@@ -63,10 +63,11 @@
         <param name="step_dist" value="$(arg step_dist)"/>
         <param name="cycle_time" value="$(arg cycle_time)"/>
     </node>
-    
     <node name="data_gatherer" pkg="data_gatherer" type="data_gatherer.py" required="True">
         <param name="out_file" value="$(find data_gatherer)/output/res.csv"/>
         <param name="step_dist" value="$(arg step_dist)"/>
         <param name="cycle_time" value="$(arg cycle_time)"/>
-    </node>
+    </node> 
+
+    
 </launch>
