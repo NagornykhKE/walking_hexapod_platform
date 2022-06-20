@@ -504,12 +504,12 @@ class AntDescr(object):
         move_time = self.cycle_time * 0.5
         get_down_time = self.cycle_time * 0.25
         time_moments = [0.,
-                        move_time/6, 
-                        move_time/6 + get_down_time, 
-                        move_time/6 + get_down_time + get_up_time,
-                        3*move_time/6 + get_down_time + get_up_time,
-                        3*move_time/6 + get_up_time + 2*get_down_time,
-                        3*move_time/6 + 2*get_up_time + 2*get_down_time,
+                        move_time/2, 
+                        move_time/2 + get_down_time, 
+                        move_time/2 + get_down_time + get_up_time,
+                        3*move_time/2 + get_down_time + get_up_time,
+                        3*move_time/2 + get_up_time + 2*get_down_time,
+                        3*move_time/2 + 2*get_up_time + 2*get_down_time,
                         2*(move_time + get_up_time + get_down_time)]
         for (pos, side), limb in self.limbs.items():
             # calculate disps
