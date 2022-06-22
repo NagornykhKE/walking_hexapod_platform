@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 
 import rospy
 
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64,Float64MultiArray
 from sensor_msgs.msg import JointState
 from geometry_msgs.msg import Twist
 
@@ -185,14 +185,16 @@ class LimbDescr(object):
         try:
             j2 = math.acos((side3**2 + l2**2 - l3**2) / (2*side3*l2)) + math.atan2(z, rad)
         except ValueError:
-            rospy.logerr('ant_motion_controller: too big angle in j2 for limb ({},{}) in position {:.5f}, {:.5f}, {:.5f}'
+            if debug_print:
+                rospy.logerr('ant_motion_controller: too big angle in j2 for limb ({},{}) in position {:.5f}, {:.5f}, {:.5f}'
                          .format(self.pos, self.side, dx, dy, z))
             j2 = 0.
             error_found = True
         try:
             j3 = math.acos((l2**2 + l3**2 - side3**2) / (2*l2*l3))
         except ValueError:
-            rospy.logerr('ant_motion_controller: too big angle in j3 for limb ({},{}) in position {:.5f}, {:.5f}, {:.5f}'
+            if debug_print:
+                rospy.logerr('ant_motion_controller: too big angle in j3 for limb ({},{}) in position {:.5f}, {:.5f}, {:.5f}'
                          .format(self.pos, self.side, dx, dy, z))
             j3 = 0
             error_found = True
@@ -246,7 +248,7 @@ def get_floats_from_string(input_str):
 
 
 class AntDescr(object):
-    def __init__(self, descr_str, step_dist, cycle_time):
+    def __init__(self, descr_str, step_dist, cycle_time, leg_y, body_height_down, body_height_up):
         
         # load data from description
         descr = self._load_description_from_xml_model(descr_str)
@@ -260,9 +262,9 @@ class AntDescr(object):
         #    for s in possible_sides}
         
         # constants
-        self.leg_y = 0.25
-        self.body_height_down = 0.3
-        self.body_height_up = 0.2
+        self.leg_y = leg_y
+        self.body_height_down = body_height_down
+        self.body_height_up = body_height_up
         self.step_dist = step_dist # 0.0003
         self.cycle_time = cycle_time
         self.step_diff = 0.
@@ -504,12 +506,12 @@ class AntDescr(object):
         move_time = self.cycle_time * 0.5
         get_down_time = self.cycle_time * 0.25
         time_moments = [0.,
-                        move_time/6, 
-                        move_time/6 + get_down_time, 
-                        move_time/6 + get_down_time + get_up_time,
-                        3*move_time/6 + get_down_time + get_up_time,
-                        3*move_time/6 + get_up_time + 2*get_down_time,
-                        3*move_time/6 + 2*get_up_time + 2*get_down_time,
+                        move_time/2, 
+                        move_time/2 + get_down_time, 
+                        move_time/2 + get_down_time + get_up_time,
+                        3*move_time/2 + get_down_time + get_up_time,
+                        3*move_time/2 + get_up_time + 2*get_down_time,
+                        3*move_time/2 + 2*get_up_time + 2*get_down_time,
                         2*(move_time + get_up_time + get_down_time)]
         for (pos, side), limb in self.limbs.items():
             # calculate disps
@@ -563,22 +565,46 @@ class AntDescr(object):
         #self.plan_animation_execution_loop('forward', 'right', 'walk', self.cycle_time+3)
         self.plan_animation_execution_loop('middle', 'right', 'walk', self.cycle_time)
         self.plan_animation_execution_loop('backward', 'right', 'walk', 0.)
+
+    def update_ant(self, step_dist, cycle_time, leg_y, body_height_down, body_height_up):
+        self.step_dist = step_dist
+        self.cycle_time = cycle_time
+        self.leg_y = leg_y
+        self.body_height_down = body_height_down
+        self.body_height_up = body_height_up
+        ad.prepare_for_animation() # generate poses
+        ad.get_up()
+        ad.walk_one_by_one()
+        template = 'joint_publisher: new ant parameters are' + ' {:.3}'*5
+        rospy.loginfo(template.format(float(step_dist), float(cycle_time),
+                                      float(leg_y), float(body_height_down),
+                                      float(body_height_up)))
+        
+
+ad = None
+
+def cb_update_ant(msg):
+    global ad
+    # update robot data
+    ad.update_ant(*msg.data[0:5])
         
 if __name__ == '__main__':
     try:
         rospy.init_node('ant_motion_controller', anonymous=True)
         # ant description
         ant_descr = rospy.get_param('robot_description')
+        # parameters
+        step_dist = rospy.get_param('~step_dist')
+        cycle_time = rospy.get_param('~cycle_time')
+        leg_y = rospy.get_param('~leg_y')
+        body_height_down = rospy.get_param('~body_height_down')
+        body_height_up = rospy.get_param('~body_height_up')
+        # create ant
+        ad = AntDescr(ant_descr, step_dist, cycle_time, leg_y, body_height_down, body_height_up)
+        ad.update_ant(step_dist, cycle_time, leg_y, body_height_down, body_height_up)
         
-        step_dist = 0.7
-        cycle_time = 1
-        ad = AntDescr(ant_descr, step_dist, cycle_time)
-        
-        ad.prepare_for_animation() # generate poses
-        ad.get_up()
-        #ad.walk()
-        ad.walk_one_by_one()
-        #ad.walk_on_four()
+        # subscriber to change parameters of the robot
+        params_sub = rospy.Subscriber('/set_gait_params', Float64MultiArray, cb_update_ant)
         
         rospy.spin()
     except rospy.ROSInterruptException:

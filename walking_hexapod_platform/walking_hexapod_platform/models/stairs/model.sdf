@@ -20,6 +20,7 @@
          <geometry>
            <mesh>
              <uri>model://stairs/meshes/stairs.stl</uri>
+             <scale>1 1 0.5 </scale>
            </mesh>
          </geometry>
         <surface>
@@ -42,6 +43,7 @@
          <geometry>
            <mesh>
              <uri>model://stairs/meshes/stairs.stl</uri>
+             <scale>1 1 0.5 </scale>
            </mesh>
          </geometry>
          <material>

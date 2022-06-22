@@ -1,7 +1,11 @@
 <launch>
 
-  <arg name="step_dist" default="1" />
+  <arg name="model_world" default="stairs" /> <!--also ramp5, ramp10, ramp20, stairs, step -->
+  <arg name="step_dist" default="0.7" />
   <arg name="cycle_time" default="1" />
+  <arg name="leg_y" default="0.25" />
+  <arg name="body_height_down" default="0.3" />
+  <arg name="body_height_up" default="0.2" />
   
   <env name="GAZEBO_MODEL_PATH"
     value="$(find walking_hexapod_platform)/models:$(optenv GAZEBO_MODEL_PATH)"/>
@@ -12,12 +16,7 @@
   <include
     file="$(find gazebo_ros)/launch/empty_world.launch" >
     <arg name="paused" value="true"/>
-    <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/plane.world"/-->
-    <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/ramp5.world"/-->
-    <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/ramp10.world"/-->
-    <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/ramp20.world"/-->
-    <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/stairs.world"/-->
-    <!--arg name="world_name" default="$(find walking_hexapod_platform)/worlds/step.world"/-->
+    <arg name="world_name" default="$(find walking_hexapod_platform)/worlds/$(arg model_world).world"/>
   </include>  
    
    <param name="robot_description" command="xacro --inorder '$(find walking_hexapod_platform)/urdf/walking_hexapod_platform.urdf'"/>
@@ -25,7 +24,7 @@
     name="spawn_model"
     pkg="gazebo_ros"
     type="spawn_model"
-    args="-urdf -param robot_description -model walking_hexapod_platform -x 0.0 -y -1.5 -z 0.0 -Y 1.57"
+    args="-urdf -param robot_description -model walking_hexapod_platform -x 0.0 -y 0.0 -z 0.0"
     output="screen" />
 
     <rosparam command="load" file="$(find walking_hexapod_platform)/config/control.yaml" />
@@ -58,15 +57,23 @@
               right_backward3_position_controller
               right_backward4_position_controller">
         </node>
-        
-    <node name="joint_publisher" pkg="joint_publisher" type="joint_publisher.py" >
+
+    <node name="joint_publisher" pkg="joint_publisher" type="joint_publisher.py" output="screen">
         <param name="step_dist" value="$(arg step_dist)"/>
         <param name="cycle_time" value="$(arg cycle_time)"/>
+        <param name="leg_y" value="$(arg leg_y)"/>
+        <param name="body_height_down" value="$(arg body_height_down)"/>
+        <param name="body_height_up" value="$(arg body_height_up)"/>
     </node>
-    <node name="data_gatherer" pkg="data_gatherer" type="data_gatherer.py" required="True">
+    <node name="data_gatherer" pkg="data_gatherer" type="data_gatherer.py" required="True" output="screen">
         <param name="out_file" value="$(find data_gatherer)/output/res.csv"/>
+        <param name="qtable_file" value="$(find data_gatherer)/output/qtable.bin"/>
+        <param name="model_world" value="$(arg model_world)" />
         <param name="step_dist" value="$(arg step_dist)"/>
         <param name="cycle_time" value="$(arg cycle_time)"/>
+        <param name="leg_y" value="$(arg leg_y)"/>
+        <param name="body_height_down" value="$(arg body_height_down)"/>
+        <param name="body_height_up" value="$(arg body_height_up)"/>
     </node> 
 
     
